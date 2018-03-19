@@ -53,7 +53,7 @@ with tf.Session(config=config) as sess:
             y = time.time()
             input_im = np.array([inference_data.inputs[i]]).astype(np.float32)
             path_lr = inference_data.paths_LR[i]
-            os.remove(path_lr)
+            #os.remove(path_lr)
             results = sess.run(save_fetch, feed_dict={inputs_raw: input_im, path_LR: path_lr})
             filesets = save_images(results)
             print (time.time()-y)
