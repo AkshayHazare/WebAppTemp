@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/vader/jquery-ui.css" />
     <style>
         body {
-            max-width: 800px;
             margin: auto;
             padding: 1em;
             background: black;
@@ -24,9 +23,17 @@
         .notice {
             font-size: 80%%;
           }
-        .vertical-align {
-            display: flex;
-            align-items: center;
+
+        .grid-container {
+          display: grid;
+          justify-content: space-evenly;
+          grid-template-columns: 33.33% 33.33% 33.33%;
+          grid-gap: 10px;
+          padding: 10px;
+        }
+        .grid-container > div {
+          text-align: center;
+          font-size: 30px;
         }
 
         #drop {
@@ -45,40 +52,81 @@
             border-style: solid;
             box-shadow: inset 0 3px 4px #888;
         }
+        .img-responsive {
+         display: block;
+         max-width: 100%;
+         max-height: 70%;
+        }
+
     </style>
 </head>
 
 <body>
-    <h1>Image Enhancer</h1>
-    <div class = "row vertical-align">
+    <div align="center"> <h1>Image Enhancer</h1> </div>
 
-        <div class = "col-xs-6">
-            <h3>  Reference Image  </h3>
-            <div id="in_images">
-                    <img src = "{{url_for('send_input_image',filename=image_name)}}">
+    <div class = "grid-container">
+
+        <div align="center">
+            <h3>Reference Image</h3>
+            <div align="center">
+                    <img id='img1' class= "img-responsive" src = "{{url_for('send_input_image',filename=image_name)}}" alt="">
             </div>
             <script>
+                $("img1").error(function(){
+                        $(this).hide();
+                });
             </script>
         </div> <!-- ...
 
-    --> <div class = "col-xs-6">
+    --> <div align="center">
             <noscript>Note: You must have javascript enabled in order to upload and dynamically view new images.</noscript>
             <fieldset>
                 <p id="status"> Upload an image </p>
-                <div id="progressbar"></div>
                 <form id="upload-form" action = "{{ url_for('upload')}}" method="POST" enctype="multipart/form-data">
                     <input id="file" type="file" name="file[]" accept="image/*" multiple/>
                     <input type="submit" value="Enhance" id="upload-button">
+                    <div id="drop">or drop image here</div>
                 </form>
             </fieldset>
+            <script>
+                <!--function file_select_handler(e) {-->
+                    <!--handle_hover(e);-->
+                    <!--var dt = e.dataTransfer || (e.originalEvent && e.originalEvent.dataTransfer);-->
+                    <!--var files = e.target.files || (dt && dt.files);-->
+                    <!--document.getElementById("file") = files[0]-->
+
+                <!--}-->
+                <!--function handle_hover(e) {-->
+                      <!--var e = window.event;-->
+                      <!--e.stopPropagation();-->
+                      <!--e.preventDefault();-->
+                      <!--e.target.className = (e.type == 'dragleave' || e.type == 'drop') ? '' : 'hover';-->
+                  <!--}-->
+                  <!--$('#drop').bind('drop',function(e) {-->
+                      <!--handle_hover(e);-->
+                      <!--if (e.originalEvent.dataTransfer.files.length < 1) {-->
+                          <!--return;-->
+                      <!--}-->
+                      <!--file_select_handler(e.originalEvent.dataTransfer.files[0]);-->
+                  <!--}).bind('dragenter dragleave dragover', handle_hover);-->
+                  <!--$('#file').change(function(e){-->
+                      <!--file_select_handler(e.target.files[0]);-->
+                      <!--console.log(e.target.files[0]);-->
+                      <!--e.target.value = '';-->
+                  <!--});-->
+
+            </script>
         </div> <!-- ...
 
-    --> <div class = "col-xs-6">
-            <h3>      Enhanced Image     </h3>
-            <div id="op_images">
-                    <img src = "{{url_for('send_output_image',filename=image_name)}}">
+    --> <div align="center">
+            <h3>Enhanced Image</h3>
+            <div align = "center">
+                    <img class= "img-responsive" src = "{{url_for('send_output_image',filename=image_name)}}">
             </div>
             <script>
+                $("img").error(function(){
+                        $(this).hide();
+                });
             </script>
         </div>
    </div>

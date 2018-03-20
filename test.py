@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, after_this_request
 import shutil
+import main
 
 DATA_DIR = "/data"
 OP_DIR = "/output"
@@ -17,11 +18,11 @@ def upload():
     target = os.path.join(APP_ROOT, 'static')
     source = os.path.join(APP_ROOT,'output/')
 
-   # if not os.path.isdir(target):
-   #     os.mkdir(target)
-   # else:
-   #     shutil.rmtree(os.path.join(APP_ROOT'static'),ignore_errors=True)
-   #     os.mkdir(target)*/
+    if not os.path.isdir(target):
+       os.mkdir(target)
+    else:
+       shutil.rmtree(os.path.join(APP_ROOT,'static'),ignore_errors=True)
+       os.mkdir(target)
 
     if not os.path.isdir(source):
         os.mkdir(source)
@@ -42,20 +43,21 @@ def upload():
         print("Waiting")
 
 
-    # return send_from_directory("images", filename, as_attachment=True)
+    #return send_from_directory("static", filename, as_attachment=True)
     return render_template("index.html", image_name = filename)
 
 @app.route('/static/<filename>')
 def send_input_image(filename):
-    return send_from_directory("static/", filename)
+    return send_from_directory("static", filename)
 
 @app.route('/output/<filename>')
 def send_output_image(filename):
-    @after_this_request
-    def delete_img(self):
-        shutil.rmtree(os.path.join(APP_ROOT,'static'),ignore_errors=True)
-    return send_from_directory("output/images", filename)
+    # @after_this_request
+    # def delete_img(self):
+    #     shutil.rmtree(os.path.join(APP_ROOT,'static'),ignore_errors=True)
+    return send_from_directory("output", filename)
 
 if __name__ == "__main__":
     app.debug = True
+    main.run()
     app.run(port=5000, debug=True)
