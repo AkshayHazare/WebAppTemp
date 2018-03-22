@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, send_from_directory, after_this_request
 import shutil
-import main
+#import main
 
 DATA_DIR = "/data"
 OP_DIR = "/output"
@@ -42,7 +42,7 @@ def upload():
 
 @app.route('/static/<filename>')
 def send_input_image(filename):
-    return send_from_directory("input", filename)
+    return send_from_directory("static/", filename)
 
 @app.route('/output/images/<filename>')
 def send_output_image(filename):
@@ -50,5 +50,6 @@ def send_output_image(filename):
 
 if __name__ == "__main__":
     app.debug = True
-    main.run()
+    #main.run()
+
     app.run(port=5000, debug=True)
