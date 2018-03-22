@@ -16,46 +16,37 @@ def index():
 @app.route("/upload", methods=["POST"])
 def upload():
     target = os.path.join(APP_ROOT, 'static')
-    source = os.path.join(APP_ROOT,'output/')
+    source = os.path.join(APP_ROOT,'output/images')
 
     if not os.path.isdir(target):
        os.mkdir(target)
     else:
-       shutil.rmtree(os.path.join(APP_ROOT,'static'),ignore_errors=True)
+       shutil.rmtree(target,ignore_errors=True)
        os.mkdir(target)
 
     if not os.path.isdir(source):
         os.mkdir(source)
     else:
-        shutil.rmtree(source, ignore_errors=True)
-        os.mkdir(source)
+       shutil.rmtree(source, ignore_errors=True)
+       os.mkdir(source)
 
     for upload in request.files.getlist("file[]"):
-        print(upload)
-        print("{} is the file name".format(upload.filename))
         filename = upload.filename
         destination = "/".join([target, filename])
-        print ("Accept incoming file:", filename)
-        print ("Save it to:", destination)
         upload.save(destination)
 
     while(os.listdir(source)==[]):
         print("Waiting")
-
-
     #return send_from_directory("static", filename, as_attachment=True)
     return render_template("index.html", image_name = filename)
 
 @app.route('/static/<filename>')
 def send_input_image(filename):
-    return send_from_directory("static", filename)
+    return send_from_directory("input", filename)
 
-@app.route('/output/<filename>')
+@app.route('/output/images/<filename>')
 def send_output_image(filename):
-    # @after_this_request
-    # def delete_img(self):
-    #     shutil.rmtree(os.path.join(APP_ROOT,'static'),ignore_errors=True)
-    return send_from_directory("output", filename)
+    return send_from_directory("output/images/", filename)
 
 if __name__ == "__main__":
     app.debug = True

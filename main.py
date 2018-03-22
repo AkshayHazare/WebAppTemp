@@ -45,17 +45,18 @@ with tf.Session(config=config) as sess:
     # Load the preTrained model
     # print('Loading weights from the pre-trained model')
     weight_initializer.restore(sess, "./Model/model-200000")
-
+    x = []
     print('Evaluation starts!!')
     while(True):
         inference_data = inference_data_loader()
         for i in range(len(inference_data.inputs)):
-            y = time.time()
-            input_im = np.array([inference_data.inputs[i]]).astype(np.float32)
-            path_lr = inference_data.paths_LR[i]
-            #os.remove(path_lr)
-            results = sess.run(save_fetch, feed_dict={inputs_raw: input_im, path_LR: path_lr})
-            filesets = save_images(results)
-            print (time.time()-y)
-            for i, f in enumerate(filesets):
-                print('evaluate image', f['name'])
+            if i not in x:
+                x = x + [i]
+                y = time.time()
+                input_im = np.array([inference_data.inputs[i]]).astype(np.float32)
+                path_lr = inference_data.paths_LR[i]
+                results = sess.run(save_fetch, feed_dict={inputs_raw: input_im, path_LR: path_lr})
+                filesets = save_images(results)
+                print (time.time()-y)
+                for i, f in enumerate(filesets):
+                    print('evaluate image', f['name'])
