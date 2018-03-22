@@ -50,8 +50,6 @@ with tf.Session(config=config) as sess:
     while(True):
         inference_data = inference_data_loader()
         for i in range(len(inference_data.inputs)):
-            if i not in x:
-                x = x + [i]
                 y = time.time()
                 input_im = np.array([inference_data.inputs[i]]).astype(np.float32)
                 path_lr = inference_data.paths_LR[i]
@@ -60,3 +58,4 @@ with tf.Session(config=config) as sess:
                 print (time.time()-y)
                 for i, f in enumerate(filesets):
                     print('evaluate image', f['name'])
+                break

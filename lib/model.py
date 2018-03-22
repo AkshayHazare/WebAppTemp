@@ -12,7 +12,10 @@ import numpy as np
 
 # The inference data loader. Allow input image with different size
 def inference_data_loader():
-
+    if not os.path.isdir("./static/"):
+        try: 
+            os.mkdir("./static")
+        except: None
     image_list_LR_temp = os.listdir("./static/")
     image_list_LR = [os.path.join("./static/", _) for _ in image_list_LR_temp if _.split('.')[-1] == 'png']
 

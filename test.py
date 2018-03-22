@@ -16,6 +16,7 @@ def index():
 @app.route("/upload", methods=["POST"])
 def upload():
     target = os.path.join(APP_ROOT, 'static')
+    target1 = os.path.join(APP_ROOT, 'input')
     source = os.path.join(APP_ROOT,'output/images')
 
     if not os.path.isdir(target):
@@ -33,19 +34,23 @@ def upload():
     for upload in request.files.getlist("file[]"):
         filename = upload.filename
         destination = "/".join([target, filename])
+        destination1 = "/".join([target1,filename])
         upload.save(destination)
+        shutil.copyfile(destination,destination1)
+    print(os.listdir(target)==os.listdir(target1))
 
     while(os.listdir(source)==[]):
-        print("Waiting")
+        pass
     #return send_from_directory("static", filename, as_attachment=True)
     return render_template("index.html", image_name = filename)
 
 @app.route('/static/<filename>')
 def send_input_image(filename):
-    return send_from_directory("static/", filename)
+    return send_from_directory("input/", filename)
 
 @app.route('/output/images/<filename>')
 def send_output_image(filename):
+    os.remove(os.path.join(APP_ROOT,'static/'+filename))
     return send_from_directory("output/images/", filename)
 
 if __name__ == "__main__":
